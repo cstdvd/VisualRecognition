@@ -10,7 +10,6 @@ public class VideoObjectRecognitionMain {
 	
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-//		System.load(new File("lib/bin/opencv_ffmpeg2411_64.dll").getAbsolutePath());
 	}
 	
 	private static final String VIDEO_SRC = "data/img/videoTest.mp4";
@@ -19,8 +18,12 @@ public class VideoObjectRecognitionMain {
 	private static final String OBJECT_IMG = "data/img/iphone.jpg";
 
 	public static void main(String[] args) throws Exception {
-		VideoObjectRecognition objectRecognition = new VideoObjectRecognition(VIDEO_SRC, OBJECT_IMG);
-//		VideoObjectRecognition objectRecognition = new VideoObjectRecognition(CAMERA_SRC, OBJECT_IMG);
+		if(!System.getProperty("os.name").equals("Mac OS X")) {
+			System.load(new File("lib/bin/opencv_ffmpeg2411_64.dll").getAbsolutePath());
+		}
+		
+		//VideoObjectRecognition objectRecognition = new VideoObjectRecognition(VIDEO_SRC, OBJECT_IMG);
+		VideoObjectRecognition objectRecognition = new VideoObjectRecognition(CAMERA_SRC, OBJECT_IMG);
 
 		objectRecognition.start();
 	}

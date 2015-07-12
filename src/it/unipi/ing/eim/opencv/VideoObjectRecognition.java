@@ -67,7 +67,7 @@ public class VideoObjectRecognition {
 	}
 
 	private Mat computeHomography(Mat frame) {
-		//TODO
+
 		Mat homography = null;
 		MatOfKeyPoint keypointsScene = KeyPointsDetector.detectKeypoints(frame);
 		Mat descriptorScene = FeaturesExtraction.extractDescriptor(frame, keypointsScene);
@@ -75,12 +75,12 @@ public class VideoObjectRecognition {
 		MatOfDMatch matches = FeaturesMatching.match(descriptorObject, descriptorScene);
 		MatOfDMatch goodMatches = FeaturesMatchingFiltered.matchWithFiltering(matches, Parameters.DISTANCE_THRESHOLD);
 
-		if (goodMatches.total() > 5) {
+		if (goodMatches.total() > Parameters.GOOD_MATCHES_THRESHOLD) {
 			System.out.println("goodMatches: "+goodMatches.total());
 
 			ransac.computeHomography(goodMatches.toList(), keypointsObject, keypointsScene);
 			System.out.println("numCountInliers: "+ransac.countNumInliers());
-			if (ransac.countNumInliers() > 5)
+			if (ransac.countNumInliers() > Parameters.RANSAC_INLIERS_THRESHOLD)
 				homography = ransac.getHomography();
 			if(homography == null)
 				System.out.println("homography = null");
