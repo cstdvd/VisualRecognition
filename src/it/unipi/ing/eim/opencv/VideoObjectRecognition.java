@@ -52,7 +52,7 @@ public class VideoObjectRecognition {
                  String str = name.substring(lastIndex);
                  
                  // match path name extension
-                 if(str.equals(".jpg") || str.equals(".jpeg") || str.equals(".png"))
+                 if(str.equals(".jpg") || str.equals(".JPG") || str.equals(".jpeg") || str.equals(".png"))
                  {
                     return true;
                  }
@@ -92,7 +92,7 @@ public class VideoObjectRecognition {
 
 		Mat frame = new Mat();
 		while (videoCapture.read(frame) == true) {
-			if (keyframeCounter++ % Parameters.KEYFRAME_FREQ == 0) {
+//			if (keyframeCounter++ % Parameters.KEYFRAME_FREQ == 0) {
 				for(int i = 0; i < imgObject.length; i++){
 					Mat homography = computeHomography(frame, i);
 
@@ -101,7 +101,7 @@ public class VideoObjectRecognition {
 					}
 					Tools.updateFrame(frame, "Object Recognition");
 				}
-			}
+//			}
 		}
 		System.exit(0);
 	}
