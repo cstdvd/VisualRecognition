@@ -12,11 +12,10 @@ public class VideoObjectRecognitionMain {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}
 	
-	private static final String VIDEO_SRC = "data/img/marlboro.mov";
+	private static final String VIDEO_SRC = "data/img/marlboro2.mov";
 	private static final int CAMERA_SRC = 0;
 	
-	//private static final String OBJECT_IMG = "data/img/santoro.jpg";
-	private static final String OBJECT_DIR = "data/img/marlboro/";
+	private static final String OBJECT_DIR = "data/img/test/";
 
 	public static void main(String[] args) throws Exception {
 		if(!System.getProperty("os.name").equals("Mac OS X")) {

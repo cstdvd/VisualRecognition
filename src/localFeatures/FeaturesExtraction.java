@@ -15,18 +15,6 @@ public class FeaturesExtraction {
 		descExtractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
 	}
 
-	public static void main(String[] args) throws Exception {
-
-		String query = "data/img/jeanne-hebuterne.jpg";
-
-		Mat img = Highgui.imread(query, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-
-		MatOfKeyPoint keypoints = KeyPointsDetector.detectKeypoints(img);
-		Mat descQuery = extractDescriptor(img, keypoints);
-
-		printFeatureValues(descQuery);
-	}
-
 	public static Mat extractDescriptor(Mat img, MatOfKeyPoint keypoints) {
 		Mat descriptor = new Mat();
 		descExtractor.compute(img, keypoints, descriptor);

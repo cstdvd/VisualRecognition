@@ -21,31 +21,6 @@ public class FeaturesMatchingFiltered {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}
 
-	public static void main(String[] args) throws Exception {
-
-		String image1 = "data/img/mixage.jpg";
-		String image2 = "data/img/jeanne-hebuterne.jpg";
-
-		Mat img1 = Highgui.imread(image1, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-		Mat img2 = Highgui.imread(image2, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-
-		MatOfKeyPoint keypoints1 = KeyPointsDetector.detectKeypoints(img1);
-		Mat descriptor1 = FeaturesExtraction.extractDescriptor(img1, keypoints1);
-
-		MatOfKeyPoint keypoints2 = KeyPointsDetector.detectKeypoints(img2);
-		Mat descriptor2 = FeaturesExtraction.extractDescriptor(img2, keypoints2);
-
-		MatOfDMatch matches = FeaturesMatching.match(descriptor1, descriptor2);
-
-		MatOfDMatch matches2 = matchWithFiltering(matches, GOOD_MATCHES_THRESHOLD);
-
-		Mat filteredMatches = new Mat();
-
-		Features2d.drawMatches(img1, keypoints1, img2, keypoints2, matches2, filteredMatches);
-
-		Tools.imageDisplay(filteredMatches, "Filtered Matching");
-	}
-
 	public static MatOfDMatch matchWithFiltering(MatOfDMatch matches, int threshold) {
 		List<DMatch> filteredMatch = getGoodMatches(matches, threshold);
 		MatOfDMatch filteredMatches = new MatOfDMatch();

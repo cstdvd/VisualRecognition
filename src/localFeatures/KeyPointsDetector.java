@@ -18,19 +18,6 @@ public class KeyPointsDetector {
 		detector = FeatureDetector.create(FeatureDetector.ORB);
 //		detector.read("data/detectorPar.xml");
 	}	
-
-	public static void main(String[] args) throws Exception {
-		
-		String query = "data/img/jeanne-hebuterne.jpg";
-		
-		Mat img = Highgui.imread(query, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-		
-		MatOfKeyPoint keypoints = detectKeypoints(img);
-		printKeyPointsValues(keypoints);
-
-		Tools.displayKeyPoints(img, keypoints);
-
-	}
 	
 	public static MatOfKeyPoint detectKeypoints(Mat img) {
 		MatOfKeyPoint keypoints = new MatOfKeyPoint();

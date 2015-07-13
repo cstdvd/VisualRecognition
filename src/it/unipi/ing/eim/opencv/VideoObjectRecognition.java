@@ -52,7 +52,7 @@ public class VideoObjectRecognition {
                  String str = name.substring(lastIndex);
                  
                  // match path name extension
-                 if(str.equals(".jpg") || str.equals(".JPG") || str.equals(".jpeg") || str.equals(".png"))
+                 if(str.equals(".jpg") || str.equals(".JPG") || str.equals(".jpeg") || str.equals(".png") || str.equals(".PNG"))
                  {
                     return true;
                  }
@@ -72,8 +72,6 @@ public class VideoObjectRecognition {
 			imgObject[i] = Highgui.imread(objectFile+listOfFiles[i].getName(), Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 			keypointsObject[i] = KeyPointsDetector.detectKeypoints(imgObject[i]);
 			descriptorObject[i] = FeaturesExtraction.extractDescriptor(imgObject[i], keypointsObject[i]);
-
-			Tools.displayKeyPoints(imgObject[i], keypointsObject[i]);
 		}
 		
 		ransac = new Ransac();
@@ -92,7 +90,7 @@ public class VideoObjectRecognition {
 
 		Mat frame = new Mat();
 		while (videoCapture.read(frame) == true) {
-//			if (keyframeCounter++ % Parameters.KEYFRAME_FREQ == 0) {
+			if (keyframeCounter++ % Parameters.KEYFRAME_FREQ == 0) {
 				for(int i = 0; i < imgObject.length; i++){
 					Mat homography = computeHomography(frame, i);
 
@@ -101,7 +99,7 @@ public class VideoObjectRecognition {
 					}
 					Tools.updateFrame(frame, "Object Recognition");
 				}
-//			}
+			}
 		}
 		System.exit(0);
 	}
@@ -122,8 +120,6 @@ public class VideoObjectRecognition {
 			System.out.println("numCountInliers: "+ransac.countNumInliers());
 			if (ransac.countNumInliers() > Parameters.RANSAC_INLIERS_THRESHOLD)
 				homography = ransac.getHomography();
-			if(homography == null)
-				System.out.println("homography = null");
 		}
 		return homography;
 	}
