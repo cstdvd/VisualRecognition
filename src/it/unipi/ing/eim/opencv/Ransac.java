@@ -18,7 +18,7 @@ public class Ransac {
 
 	public void computeHomography(List<DMatch> goodMatches,
 			MatOfKeyPoint keypointsObject, MatOfKeyPoint keypointsScene) {
-		//TODO
+
 		MatOfPoint2f obj = new MatOfPoint2f();
 		MatOfPoint2f scene = new MatOfPoint2f();
 
@@ -52,7 +52,7 @@ public class Ransac {
 	}
 
 	public int countNumInliers() {
-		//TODO
+
 		int inliersPoints = 0;
 		int rows = inliers.rows();
 		for (int i = 0; i < rows; i++) {

@@ -34,7 +34,7 @@ public class FeaturesExtraction {
 	}
 
 	public static void printFeatureValues(Mat descQuery) {
-		// TODO: show features data
+		// show features data
 		for (int i = 0; i < descQuery.rows(); i++) {
 			for (int j = 0; j < descQuery.cols(); j++) {
 				byte[] bytes = new byte[1];
