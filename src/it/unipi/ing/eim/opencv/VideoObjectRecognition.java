@@ -71,7 +71,6 @@ public class VideoObjectRecognition {
 		descriptorObject = new Mat[listOfFiles.length];
 		
 		for(int i=0; i<listOfFiles.length; i++){
-			System.out.println(objectFile+listOfFiles[i].getName());
 			imgObject[i] = Highgui.imread(objectFile+listOfFiles[i].getName(), Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 			keypointsObject[i] = KeyPointsDetector.detectKeypoints(imgObject[i]);
 			descriptorObject[i] = FeaturesExtraction.extractDescriptor(imgObject[i], keypointsObject[i]);
@@ -101,10 +100,8 @@ public class VideoObjectRecognition {
 					if (homography != null) {
 						name = listOfFiles[i].getName();
 						name = name.split("\\.")[0];
-						
+
 						Tools.addBoundingBox(frame, imgObject[i], ransac.getHomography(), name);
-						
-						System.out.println(name);
 					}
 					Tools.updateFrame(frame, "Object Recognition");
 				}

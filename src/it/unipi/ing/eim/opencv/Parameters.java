@@ -7,7 +7,7 @@ public class Parameters {
 	
 	public static final int GOOD_MATCHES_THRESHOLD = 15; //15;
 	
-	public static final int DISTANCE_THRESHOLD = 35; //35;
+	public static final int DISTANCE_THRESHOLD = 40; //35;
 
 
 }
