@@ -174,6 +174,39 @@ public class Tools {
 		Core.line(imgScene, new Point(x), new Point(y), scalar, 4);
 	}
 	
+	public static void addBoundingBox(Mat imgScene, Mat imgObject, Mat homography, String name) {
+		Mat objCorners = new Mat(4, 1, CvType.CV_32FC2);
+		Mat sceneCorners = new Mat(4, 1, CvType.CV_32FC2);
+
+		objCorners.put(0, 0, new double[] {0, 0});
+		objCorners.put(1, 0, new double[] {imgObject.cols(), 0});
+		objCorners.put(2, 0,
+				new double[] {imgObject.cols(), imgObject.rows()});
+		objCorners.put(3, 0, new double[] {0, imgObject.rows()});
+		// obj_corners:input
+		Core.perspectiveTransform(objCorners, sceneCorners, homography);
+
+		Scalar scalar = new Scalar(0, 255, 0);
+
+		double[] x = sceneCorners.get(0, 0);
+		double[] y = sceneCorners.get(1, 0);
+		Core.line(imgScene, new Point(x), new Point(y), scalar, 4);
+
+		x = y;
+		y = sceneCorners.get(2, 0);
+		Core.line(imgScene, new Point(x), new Point(y), scalar, 4);
+
+		x = y;
+		y = sceneCorners.get(3, 0);
+		Core.line(imgScene, new Point(x), new Point(y), scalar, 4);
+
+		x = y;
+		y = sceneCorners.get(0, 0);
+		Core.line(imgScene, new Point(x), new Point(y), scalar, 4);
+		
+		Core.putText(imgScene, name, new Point(x), Core.FONT_HERSHEY_DUPLEX, 1.5, new Scalar(444));
+	}
+	
 	public static void printMatInfo(Mat mat) {
 		System.out.println("cols: " + mat.cols());
 		System.out.println("width: " + mat.width());

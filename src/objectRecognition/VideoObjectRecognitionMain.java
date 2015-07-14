@@ -12,7 +12,7 @@ public class VideoObjectRecognitionMain {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}
 	
-	private static final String VIDEO_SRC = "data/img/marlboro2.mov";
+	private static final String VIDEO_SRC = "data/img/test2.mov";
 	private static final int CAMERA_SRC = 0;
 	
 	private static final String OBJECT_DIR = "data/img/test/";

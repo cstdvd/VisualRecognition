@@ -1,7 +1,7 @@
 package it.unipi.ing.eim.opencv;
 
 public class Parameters {
-	public static final int KEYFRAME_FREQ = 15;
+	public static final int KEYFRAME_FREQ = 10;
 		
 	public static final int RANSAC_INLIERS_THRESHOLD = 12; //12;
 	

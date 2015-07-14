@@ -18,6 +18,9 @@ public class VideoObjectRecognition {
 
 	private VideoCapture videoCapture;
 
+	private File dir;
+	private File[] listOfFiles;
+	
 	private Mat[] imgObject;
 	private MatOfKeyPoint[] keypointsObject;
 	private Mat[] descriptorObject;
@@ -61,8 +64,8 @@ public class VideoObjectRecognition {
            }
         };
         
-		File dir = new File(objectFile);
-		File listOfFiles[] = dir.listFiles(fileNameFilter);
+		dir = new File(objectFile);
+		listOfFiles = dir.listFiles(fileNameFilter);
 		imgObject = new Mat[listOfFiles.length];
 		keypointsObject = new MatOfKeyPoint[listOfFiles.length];
 		descriptorObject = new Mat[listOfFiles.length];
@@ -89,13 +92,19 @@ public class VideoObjectRecognition {
 		}
 
 		Mat frame = new Mat();
+		String name;
 		while (videoCapture.read(frame) == true) {
 			if (keyframeCounter++ % Parameters.KEYFRAME_FREQ == 0) {
 				for(int i = 0; i < imgObject.length; i++){
 					Mat homography = computeHomography(frame, i);
 
 					if (homography != null) {
-						Tools.addBoundingBox(frame, imgObject[i], ransac.getHomography());
+						name = listOfFiles[i].getName();
+						name = name.split("\\.")[0];
+						
+						Tools.addBoundingBox(frame, imgObject[i], ransac.getHomography(), name);
+						
+						System.out.println(name);
 					}
 					Tools.updateFrame(frame, "Object Recognition");
 				}
