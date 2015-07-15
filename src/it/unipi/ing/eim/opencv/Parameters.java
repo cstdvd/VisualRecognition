@@ -9,5 +9,5 @@ public class Parameters {
 	
 	public static final int DISTANCE_THRESHOLD = 40; //35;
 
-
+	//david è un rompiscatole
 }
