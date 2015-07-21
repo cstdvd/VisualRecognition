@@ -15,7 +15,7 @@ public class VideoObjectRecognitionMain {
 	private static final String VIDEO_SRC = "data/img/test2.mov";
 	private static final int CAMERA_SRC = 0;
 	
-	private static final String OBJECT_DIR = "data/img/test/";
+	private static final String OBJECT_DIR = "data/img/test2/";
 
 	public static void main(String[] args) throws Exception {
 		if(!System.getProperty("os.name").equals("Mac OS X")) {

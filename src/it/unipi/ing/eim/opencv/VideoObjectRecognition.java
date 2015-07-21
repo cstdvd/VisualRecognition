@@ -6,8 +6,10 @@ import java.io.FilenameFilter;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDMatch;
 import org.opencv.core.MatOfKeyPoint;
+import org.opencv.core.Size;
 import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
+import org.opencv.imgproc.Imgproc;
 
 import localFeatures.FeaturesExtraction;
 import localFeatures.FeaturesMatching;
@@ -91,19 +93,26 @@ public class VideoObjectRecognition {
 		}
 
 		Mat frame = new Mat();
+		Mat resFrame = new Mat();
 		String name;
+		
+		videoCapture.read(frame);
+		Size size = resizeTo480p(frame);
+		System.out.println("Video size: "+size.height+" x "+size.width);
+		
 		while (videoCapture.read(frame) == true) {
 			if (keyframeCounter++ % Parameters.KEYFRAME_FREQ == 0) {
+				Imgproc.resize(frame, resFrame, size);
 				for(int i = 0; i < imgObject.length; i++){
-					Mat homography = computeHomography(frame, i);
+					Mat homography = computeHomography(resFrame, i);
 
 					if (homography != null) {
 						name = listOfFiles[i].getName();
 						name = name.split("\\.")[0];
 
-						Tools.addBoundingBox(frame, imgObject[i], ransac.getHomography(), name);
+						Tools.addBoundingBox(resFrame, imgObject[i], ransac.getHomography(), name);
 					}
-					Tools.updateFrame(frame, "Object Recognition");
+					Tools.updateFrame(resFrame, "Object Recognition");
 				}
 			}
 		}
@@ -128,5 +137,13 @@ public class VideoObjectRecognition {
 				homography = ransac.getHomography();
 		}
 		return homography;
+	}
+	
+	// Takes the frame size and returns the proportional size in 480p
+	private Size resizeTo480p(Mat frame) {
+		int width = frame.width();
+		int height = frame.height();
+		
+		return new Size((width*480)/height, 480);
 	}
 }
