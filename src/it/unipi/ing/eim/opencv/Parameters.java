@@ -9,5 +9,6 @@ public class Parameters {
 	
 	public static final int DISTANCE_THRESHOLD = 40; //35;
 
-	//david è un rompiscatole
+	public static final String OBJECT_DIR = "data/img/test2/";
+	public static final String VIDEO_DIR = "data/img/";
 }

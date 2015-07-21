@@ -2,6 +2,7 @@ package objectRecognition;
 
 import java.io.File;
 
+import it.unipi.ing.eim.opencv.Parameters;
 import it.unipi.ing.eim.opencv.VideoObjectRecognition;
 
 import org.opencv.core.Core;
@@ -15,17 +16,17 @@ public class VideoObjectRecognitionMain {
 	private static final String VIDEO_SRC = "data/img/test2.mov";
 	private static final int CAMERA_SRC = 0;
 	
-	private static final String OBJECT_DIR = "data/img/test2/";
-
 	public static void main(String[] args) throws Exception {
 		if(!System.getProperty("os.name").equals("Mac OS X")) {
 			System.load(new File("lib/bin/opencv_ffmpeg2411_64.dll").getAbsolutePath());
 		}
 		
-		VideoObjectRecognition objectRecognition = new VideoObjectRecognition(VIDEO_SRC, OBJECT_DIR);
-		//VideoObjectRecognition objectRecognition = new VideoObjectRecognition(CAMERA_SRC, OBJECT_DIR);
+		MyFrame f = new MyFrame();
+		
+		//VideoObjectRecognition objectRecognition = new VideoObjectRecognition(VIDEO_SRC, Parameters.OBJECT_DIR);
+		//VideoObjectRecognition objectRecognition = new VideoObjectRecognition(CAMERA_SRC, Parameters.OBJECT_DIR);
 
-		objectRecognition.start();
+		//objectRecognition.start();
 	}
 	
 }

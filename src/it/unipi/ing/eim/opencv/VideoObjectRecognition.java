@@ -57,7 +57,7 @@ public class VideoObjectRecognition {
                  String str = name.substring(lastIndex);
                  
                  // match path name extension
-                 if(str.equals(".jpg") || str.equals(".JPG") || str.equals(".jpeg") || str.equals(".png") || str.equals(".PNG"))
+                 if(str.equals(".jpg") || str.equals(".JPG") || str.equals(".png") || str.equals(".PNG"))
                  {
                     return true;
                  }
@@ -139,7 +139,7 @@ public class VideoObjectRecognition {
 		return homography;
 	}
 	
-	// Takes the frame size and returns the proportional size in 480p
+	// Takes the frame size and returns the size in 480p maintaining the aspect ratio
 	private Size resizeTo480p(Mat frame) {
 		int width = frame.width();
 		int height = frame.height();
