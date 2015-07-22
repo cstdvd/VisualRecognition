@@ -51,6 +51,7 @@ public class MyFrame extends JFrame {
 		
 		camRadio.setAlignmentX(Component.LEFT_ALIGNMENT);
 		videoRadio.setAlignmentX(Component.LEFT_ALIGNMENT);
+		camRadio.setSelected(true);
 		
 		// Group of radio button:
 		// choose between webcam or video source
@@ -61,37 +62,34 @@ public class MyFrame extends JFrame {
 		radioBox.add(camRadio);
 		radioBox.add(videoRadio);
 		radioBox.setBorder(new EmptyBorder(20, 40, 40, 20));
-		
 		sx.setLayout(new BorderLayout());
 		sx.add(radioBox, BorderLayout.NORTH);
-		
-		Hashtable<Integer, JLabel> hash1 = new Hashtable<>();
-		hash1.put(1, new JLabel("1"));
-		hash1.put(15, new JLabel("15"));
-		hash1.put(30, new JLabel("30"));
-		
-		Hashtable<Integer, JLabel> hash2 = new Hashtable<>();
-		hash2.put(1, new JLabel("1"));
-		hash2.put(40, new JLabel("40"));
-		hash2.put(80, new JLabel("80"));
 
 		// Sliders to set parameters
-		JSlider sliderKeyframe = new JSlider(1, 30, 10);
+		JSlider sliderKeyframe = new JSlider(0, 30, 10);
 		sliderKeyframe.setBorder(BorderFactory.createTitledBorder("Keyframe Frequency"));
+		sliderKeyframe.setMinorTickSpacing(2);
+		sliderKeyframe.setMajorTickSpacing(10);
+		sliderKeyframe.setPaintTicks(true);
 		sliderKeyframe.setPaintLabels(true);
-		sliderKeyframe.setLabelTable(hash1);
-		JSlider sliderRansacInliers = new JSlider(1, 30, 12);
+		JSlider sliderRansacInliers = new JSlider(0, 30, 12);
 		sliderRansacInliers.setBorder(BorderFactory.createTitledBorder("Ransac Inliers Threshold"));
+		sliderRansacInliers.setMinorTickSpacing(2);
+		sliderRansacInliers.setMajorTickSpacing(10);
+		sliderRansacInliers.setPaintTicks(true);
 		sliderRansacInliers.setPaintLabels(true);
-		sliderRansacInliers.setLabelTable(hash1);
-		JSlider sliderGoodMatches = new JSlider(1, 30, 15);
+		JSlider sliderGoodMatches = new JSlider(0, 30, 15);
 		sliderGoodMatches.setBorder(BorderFactory.createTitledBorder("Good Matches Threshold"));
+		sliderGoodMatches.setMinorTickSpacing(2);
+		sliderGoodMatches.setMajorTickSpacing(10);
+		sliderGoodMatches.setPaintTicks(true);
 		sliderGoodMatches.setPaintLabels(true);
-		sliderGoodMatches.setLabelTable(hash1);
-		JSlider sliderDistance = new JSlider(1, 80, 40);
+		JSlider sliderDistance = new JSlider(0, 80, 40);
 		sliderDistance.setBorder(BorderFactory.createTitledBorder("Distance Threshold"));
+		sliderDistance.setMinorTickSpacing(5);
+		sliderDistance.setMajorTickSpacing(20);
+		sliderDistance.setPaintTicks(true);
 		sliderDistance.setPaintLabels(true);
-		sliderDistance.setLabelTable(hash2);
 		
 		dx.add(Box.createRigidArea(new Dimension(100,10)));
 		dx.add(sliderKeyframe);
@@ -120,7 +118,18 @@ public class MyFrame extends JFrame {
 		p.add(scroll);
 		sx.add(p, BorderLayout.CENTER);
 		
-		setSize(470, 390);
+		// Set listeners
+		RadioListener radioListener = new RadioListener(list);
+		camRadio.addActionListener(radioListener);
+		videoRadio.addActionListener(radioListener);
+		
+		SliderListener sliderListener = new SliderListener();
+		sliderKeyframe.addChangeListener(sliderListener);
+		sliderRansacInliers.addChangeListener(sliderListener);
+		sliderGoodMatches.addChangeListener(sliderListener);
+		sliderDistance.addChangeListener(sliderListener);
+		
+		setSize(470, 405);
 		setVisible(true);
 		setResizable(false);
 		setTitle("Video Object Recognition");
