@@ -118,16 +118,22 @@ public class MyFrame extends JFrame {
 		p.add(scroll);
 		sx.add(p, BorderLayout.CENTER);
 		
-		// Set listeners
+		// Set listener for radio button
 		RadioListener radioListener = new RadioListener(list);
 		camRadio.addActionListener(radioListener);
 		videoRadio.addActionListener(radioListener);
 		
+		// Set listener for sliders
 		SliderListener sliderListener = new SliderListener();
 		sliderKeyframe.addChangeListener(sliderListener);
 		sliderRansacInliers.addChangeListener(sliderListener);
 		sliderGoodMatches.addChangeListener(sliderListener);
 		sliderDistance.addChangeListener(sliderListener);
+		
+		// Set listener for button
+		ButtonListener buttonListener = new ButtonListener(camRadio, videoRadio,
+				list, sliderKeyframe, sliderRansacInliers, sliderGoodMatches, sliderDistance);
+		startButton.addActionListener(buttonListener);
 		
 		setSize(470, 405);
 		setVisible(true);

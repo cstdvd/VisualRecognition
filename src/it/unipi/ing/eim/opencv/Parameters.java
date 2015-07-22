@@ -1,14 +1,16 @@
 package it.unipi.ing.eim.opencv;
 
 public class Parameters {
-	public static final int KEYFRAME_FREQ = 10;
+	public static int KEYFRAME_FREQ = 10;
 		
-	public static final int RANSAC_INLIERS_THRESHOLD = 12; //12;
+	public static int RANSAC_INLIERS_THRESHOLD = 12; //12;
 	
-	public static final int GOOD_MATCHES_THRESHOLD = 15; //15;
+	public static int GOOD_MATCHES_THRESHOLD = 15; //15;
 	
-	public static final int DISTANCE_THRESHOLD = 40; //35;
+	public static int DISTANCE_THRESHOLD = 40; //35;
 
-	public static final String OBJECT_DIR = "data/img/test2/";
+	public static String VIDEO_SRC = "";
+	public static final int CAMERA_SRC = 0;
+	public static final String OBJECT_DIR = "data/img/test/";
 	public static final String VIDEO_DIR = "data/img/";
 }
