@@ -21,11 +21,11 @@ public class VideoObjectRecognition {
 	private VideoCapture videoCapture;
 
 	private File dir;
-	private File[] listOfFiles;
-	
-	private Mat[] imgObject;
-	private MatOfKeyPoint[] keypointsObject;
-	private Mat[] descriptorObject;
+	private File[] objectDir;
+	private File[][] listOfFiles;
+	private Mat[][] imgObject;
+	private MatOfKeyPoint[][] keypointsObject;
+	private Mat[][] descriptorObject;
 
 	private Ransac ransac;
 
@@ -67,15 +67,22 @@ public class VideoObjectRecognition {
         };
         
 		dir = new File(objectFile);
-		listOfFiles = dir.listFiles(fileNameFilter);
-		imgObject = new Mat[listOfFiles.length];
-		keypointsObject = new MatOfKeyPoint[listOfFiles.length];
-		descriptorObject = new Mat[listOfFiles.length];
+		objectDir = dir.listFiles();
+		listOfFiles = new File[objectDir.length][];
+		imgObject = new Mat[objectDir.length][];
+		keypointsObject = new MatOfKeyPoint[objectDir.length][];
+		descriptorObject = new Mat[objectDir.length][];
 		
-		for(int i=0; i<listOfFiles.length; i++){
-			imgObject[i] = Highgui.imread(objectFile+listOfFiles[i].getName(), Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-			keypointsObject[i] = KeyPointsDetector.detectKeypoints(imgObject[i]);
-			descriptorObject[i] = FeaturesExtraction.extractDescriptor(imgObject[i], keypointsObject[i]);
+		for(int i=0; i<objectDir.length; i++){
+			listOfFiles[i]=objectDir[i].listFiles(fileNameFilter);
+			imgObject[i] = new Mat[listOfFiles[i].length];
+			keypointsObject[i] = new MatOfKeyPoint[listOfFiles[i].length];
+			descriptorObject[i] = new Mat[listOfFiles[i].length];
+			for(int j=0; j<listOfFiles[i].length; j++) {
+				imgObject[i][j] = Highgui.imread(objectFile+listOfFiles[i][j].getName(), Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+				keypointsObject[i][j] = KeyPointsDetector.detectKeypoints(imgObject[i][j]);
+				descriptorObject[i][j] = FeaturesExtraction.extractDescriptor(imgObject[i][j], keypointsObject[i][j]);
+			}
 		}
 		
 		ransac = new Ransac();
@@ -103,35 +110,40 @@ public class VideoObjectRecognition {
 		while (videoCapture.read(frame) == true) {
 			if (keyframeCounter++ % Parameters.KEYFRAME_FREQ == 0) {
 				Imgproc.resize(frame, resFrame, size);
-				for(int i = 0; i < imgObject.length; i++){
-					Mat homography = computeHomography(resFrame, i);
+				for(int i = 0; i < imgObject.length; i++) {
+					boolean found = false;
+					for(int j=0; j<imgObject[i].length; j++) {
+						Mat homography = computeHomography(resFrame, i, j);
 
-					if (homography != null) {
-						name = listOfFiles[i].getName();
-						name = name.split("[0-9]")[0];
-
-						Tools.addBoundingBox(resFrame, imgObject[i], ransac.getHomography(), name);
+						if (homography != null) {
+							name = objectDir[i].getName();
+							//name = name.split("[0-9]")[0];
+							Tools.addBoundingBox(resFrame, imgObject[i][j], ransac.getHomography(), name);
+							found = true;
+						}
+						Tools.updateFrame(resFrame, "Object Recognition");
+						if(found)
+							break;
 					}
-					Tools.updateFrame(resFrame, "Object Recognition");
 				}
 			}
 		}
 		System.exit(0);
 	}
 
-	private Mat computeHomography(Mat frame, int i) {
+	private Mat computeHomography(Mat frame, int i, int j) {
 
 		Mat homography = null;
 		MatOfKeyPoint keypointsScene = KeyPointsDetector.detectKeypoints(frame);
 		Mat descriptorScene = FeaturesExtraction.extractDescriptor(frame, keypointsScene);
 
-		MatOfDMatch matches = FeaturesMatching.match(descriptorObject[i], descriptorScene);
+		MatOfDMatch matches = FeaturesMatching.match(descriptorObject[i][j], descriptorScene);
 		MatOfDMatch goodMatches = FeaturesMatchingFiltered.matchWithFiltering(matches, Parameters.DISTANCE_THRESHOLD);
 
 		if (goodMatches.total() > Parameters.GOOD_MATCHES_THRESHOLD) {
 			System.out.println("goodMatches: "+goodMatches.total());
 
-			ransac.computeHomography(goodMatches.toList(), keypointsObject[i], keypointsScene);
+			ransac.computeHomography(goodMatches.toList(), keypointsObject[i][j], keypointsScene);
 			System.out.println("numCountInliers: "+ransac.countNumInliers());
 			if (ransac.countNumInliers() > Parameters.RANSAC_INLIERS_THRESHOLD)
 				homography = ransac.getHomography();
