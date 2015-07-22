@@ -43,7 +43,7 @@ public class VideoObjectRecognition {
 
 	private void init(String objectFile) {
 
-		// create new filename filter
+		// create new filename filters
         FilenameFilter fileNameFilter = new FilenameFilter() {
   
            @Override
@@ -66,8 +66,16 @@ public class VideoObjectRecognition {
            }
         };
         
+        FilenameFilter dirFilter = new FilenameFilter() {
+        	  
+        	@Override
+        	  public boolean accept(File dir, String name) {
+        	    return new File(dir, name).isDirectory();
+        	  }
+        };
+        
 		dir = new File(objectFile);
-		objectDir = dir.listFiles();
+		objectDir = dir.listFiles(dirFilter);
 		listOfFiles = new File[objectDir.length][];
 		imgObject = new Mat[objectDir.length][];
 		keypointsObject = new MatOfKeyPoint[objectDir.length][];
