@@ -108,7 +108,7 @@ public class VideoObjectRecognition {
 
 					if (homography != null) {
 						name = listOfFiles[i].getName();
-						name = name.split("\\.")[0];
+						name = name.split("[0-9]")[0];
 
 						Tools.addBoundingBox(resFrame, imgObject[i], ransac.getHomography(), name);
 					}
