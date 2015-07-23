@@ -43,7 +43,7 @@ public class MyFrame extends JFrame {
 	           }
 	        };
 	        
-		Container c = this.getContentPane();
+	    Container c = this.getContentPane();
 		c.setLayout(new GridLayout(1, 2));
 		
 		c.add(sx);
@@ -139,7 +139,8 @@ public class MyFrame extends JFrame {
 		setVisible(true);
 		setResizable(false);
 		setTitle("Video Object Recognition");
-		
+		setLocationRelativeTo(null);
+		setIconImage(new ImageIcon("data/img/Logo.png").getImage());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
