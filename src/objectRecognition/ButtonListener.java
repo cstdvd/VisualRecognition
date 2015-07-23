@@ -50,7 +50,6 @@ public class ButtonListener implements ActionListener{
 				Parameters.GOOD_MATCHES_THRESHOLD+"\nDistance Threshold: "+
 				Parameters.DISTANCE_THRESHOLD+"\n");
 		if(camRadio.isSelected()){
-			System.out.println("Start webcam\n");
 			CameraThread cameraThread = new CameraThread();
 			cameraThread.start();
 			return;
@@ -61,7 +60,6 @@ public class ButtonListener implements ActionListener{
 				return;
 			}
 			Parameters.VIDEO_SRC = Parameters.VIDEO_DIR+videoName;
-			System.out.println("Start video: "+Parameters.VIDEO_SRC);
 			VideoThread videoThread = new VideoThread();
 			videoThread.start();
 		}

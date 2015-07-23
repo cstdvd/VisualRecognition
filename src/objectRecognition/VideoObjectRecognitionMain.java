@@ -21,10 +21,6 @@ public class VideoObjectRecognitionMain {
 		
 		MyFrame f = new MyFrame();
 		
-		//VideoObjectRecognition objectRecognition = new VideoObjectRecognition(Parameters.VIDEO_SRC, Parameters.OBJECT_DIR);
-		//VideoObjectRecognition objectRecognition = new VideoObjectRecognition(Parameters.CAMERA_SRC, Parameters.OBJECT_DIR);
-
-		//objectRecognition.start();
 	}
 	
 }

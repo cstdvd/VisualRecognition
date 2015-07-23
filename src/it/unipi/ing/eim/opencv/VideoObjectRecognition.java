@@ -87,12 +87,11 @@ public class VideoObjectRecognition {
 			keypointsObject[i] = new MatOfKeyPoint[listOfFiles[i].length];
 			descriptorObject[i] = new Mat[listOfFiles[i].length];
 			for(int j=0; j<listOfFiles[i].length; j++) {
-				imgObject[i][j] = Highgui.imread(objectFile+listOfFiles[i][j].getName(), Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+				imgObject[i][j] = Highgui.imread(objectDir[i]+"/"+listOfFiles[i][j].getName(), Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 				keypointsObject[i][j] = KeyPointsDetector.detectKeypoints(imgObject[i][j]);
 				descriptorObject[i][j] = FeaturesExtraction.extractDescriptor(imgObject[i][j], keypointsObject[i][j]);
 			}
 		}
-		
 		ransac = new Ransac();
 		videoCapture = new VideoCapture();
 	}
@@ -147,7 +146,6 @@ public class VideoObjectRecognition {
 
 		MatOfDMatch matches = FeaturesMatching.match(descriptorObject[i][j], descriptorScene);
 		MatOfDMatch goodMatches = FeaturesMatchingFiltered.matchWithFiltering(matches, Parameters.DISTANCE_THRESHOLD);
-
 		if (goodMatches.total() > Parameters.GOOD_MATCHES_THRESHOLD) {
 			System.out.println("goodMatches: "+goodMatches.total());
 
