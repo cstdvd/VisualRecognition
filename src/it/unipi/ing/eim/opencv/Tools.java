@@ -186,8 +186,8 @@ public class Tools {
 		// obj_corners:input
 		Core.perspectiveTransform(objCorners, sceneCorners, homography);
 
-		Scalar scalar = new Scalar(0, 255, 0);
-		Scalar scalar2 = new Scalar(255, 50, 0);
+		Scalar scalar = new Scalar(255, 100, 0);
+		Scalar scalar2 = new Scalar(255, 255, 255);
 
 		double[] x = sceneCorners.get(0, 0);
 		double[] y = sceneCorners.get(1, 0);
@@ -205,7 +205,7 @@ public class Tools {
 		y = sceneCorners.get(0, 0);
 		Core.line(imgScene, new Point(x), new Point(y), scalar, 4);
 		
-		Core.putText(imgScene, name, new Point(x), Core.FONT_HERSHEY_DUPLEX, 1.5, scalar2);
+		Core.putText(imgScene, name, new Point(x), Core.FONT_HERSHEY_DUPLEX, 1.5, scalar2, 4);
 	}
 	
 	public static void printMatInfo(Mat mat) {
