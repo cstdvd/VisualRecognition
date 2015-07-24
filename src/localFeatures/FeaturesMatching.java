@@ -21,7 +21,10 @@ public class FeaturesMatching {
 
 	public static MatOfDMatch match(Mat queryDescriptors, Mat trainDescriptors) {
 		MatOfDMatch matches = new MatOfDMatch();
-		matcher.match(queryDescriptors, trainDescriptors, matches);
+		
+		//manually check of condition to avoid CvException 
+		if((queryDescriptors.type()==trainDescriptors.type() && queryDescriptors.cols()==trainDescriptors.cols()))
+			matcher.match(queryDescriptors, trainDescriptors, matches);
 		return matches;
 	}
 
