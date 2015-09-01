@@ -7,7 +7,7 @@ public class Parameters {
 	
 	public static int GOOD_MATCHES_THRESHOLD = 15; //15;
 	
-	public static int DISTANCE_THRESHOLD = 40; //35;
+	public static int DISTANCE_THRESHOLD = 35; //35;
 
 	public static String VIDEO_SRC = "";
 	public static final int CAMERA_SRC = 0;

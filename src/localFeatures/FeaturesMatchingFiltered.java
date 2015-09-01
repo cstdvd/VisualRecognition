@@ -15,8 +15,6 @@ import org.opencv.highgui.Highgui;
 
 public class FeaturesMatchingFiltered {
 
-	public static final int GOOD_MATCHES_THRESHOLD = 35;
-
 	static {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}

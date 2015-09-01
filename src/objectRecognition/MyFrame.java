@@ -84,7 +84,7 @@ public class MyFrame extends JFrame {
 		sliderGoodMatches.setMajorTickSpacing(10);
 		sliderGoodMatches.setPaintTicks(true);
 		sliderGoodMatches.setPaintLabels(true);
-		JSlider sliderDistance = new JSlider(0, 80, 40);
+		JSlider sliderDistance = new JSlider(0, 80, 35);
 		sliderDistance.setBorder(BorderFactory.createTitledBorder("Distance Threshold"));
 		sliderDistance.setMinorTickSpacing(5);
 		sliderDistance.setMajorTickSpacing(20);

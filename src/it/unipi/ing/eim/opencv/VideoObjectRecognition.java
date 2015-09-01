@@ -124,8 +124,7 @@ public class VideoObjectRecognition {
 
 						if (homography != null) {
 							name = objectDir[i].getName();
-							//name = name.split("[0-9]")[0];
-							Tools.addBoundingBox(resFrame, imgObject[i][j], ransac.getHomography(), name);
+							Tools.addBoundingBox(resFrame, imgObject[i][j], homography, name);
 							found = true;
 						}
 						Tools.updateFrame(resFrame, "Object Recognition");
