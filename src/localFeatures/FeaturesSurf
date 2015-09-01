@@ -1,0 +1,261 @@
+package localFeatures;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import it.unipi.ing.eim.opencv.Tools;
+
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfDMatch;
+import org.opencv.core.MatOfKeyPoint;
+import org.opencv.features2d.DMatch;
+import org.opencv.features2d.Features2d;
+import org.opencv.highgui.Highgui;
+
+public class FeaturesMatchingFiltered {
+
+	public static final int GOOD_MATCHES_THRESHOLD = 35;
+
+	static {
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+	}
+
+	public static MatOfDMatch matchWithFiltering(MatOfDMatch matches, int threshold) {
+		List<DMatch> filteredMatch = getGoodMatches(matches, threshold);
+		MatOfDMatch filteredMatches = new MatOfDMatch();
+		filteredMatches.fromList(filteredMatch);
+		return filteredMatches;
+	}
+
+	private static List<DMatch> getGoodMatches(MatOfDMatch matches, double threshold) {
+		List<DMatch> goodMatches = new ArrayList<DMatch>();
+		List<DMatch> matchesList = matches.toList();
+		for (int i = 0; i < matchesList.size(); i++) {
+			DMatch curr = matchesList.get(i);
+			if (curr.distance < threshold) {
+				goodMatches.add(curr);
+			}
+		}
+		return goodMatches;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+package SURF;
+
+import static com.googlecode.javacv.jna.highgui.*;
+import static com.googlecode.javacv.jna.cxcore.*;
+import static com.googlecode.javacv.jna.cv.*;
+import static com.googlecode.javacv.jna.cv.v11or20.*;
+
+import java.awt.geom.Arc2D.Float;
+import java.util.Vector;
+
+import com.googlecode.javacv.jna.cxcore.CvPoint;
+import com.googlecode.javacv.jna.cxcore.CvSeq;
+
+public class SurfExample {
+        public static void main(String[] args) {
+                String object_filename = "box.png";
+                String scene_filename = "box_in_scene.png";
+
+                CvMemStorage storage = cvCreateMemStorage(0);
+
+                CvScalar colors[] = new CvScalar[] { new CvScalar(0, 0, 255, 0),
+                                new CvScalar(0, 128, 255, 0), new CvScalar(0, 255, 255, 0),
+                                new CvScalar(0, 255, 0, 0), new CvScalar(255, 128, 0, 0),
+                                new CvScalar(255, 255, 0, 0), new CvScalar(255, 0, 0, 0),
+                                new CvScalar(255, 0, 255, 0), new CvScalar(255, 255, 255, 0) };
+
+                IplImage object = cvLoadImage(object_filename, CV_LOAD_IMAGE_GRAYSCALE);
+                IplImage image = cvLoadImage(scene_filename, CV_LOAD_IMAGE_GRAYSCALE);
+
+                cvSaveImage("box_in_scene_out.png", image);
+                cvSaveImage("box_out.png", object);
+
+                if (object == null || image == null) {
+                        System.err.println("Can not load and/or Usage: "
+                                        + "find_obj [<object_filename> <scene_filename>]");
+                        System.exit(-1);
+                }
+                IplImage object_color = cvCreateImage(cvGetSize(object), 8, 3);
+                cvCvtColor(object, object_color, CV_GRAY2BGR);
+
+                CvSeq objectKeypoints = new CvSeq();
+                CvSeq objectDescriptors = new CvSeq();
+                CvSeq imageKeypoints = new CvSeq();
+                CvSeq imageDescriptors = new CvSeq();
+                CvSURFParams params = cvSURFParams(500, 1);
+
+                double tt = (double) cvGetTickCount();
+                cvExtractSURF(object, null, objectKeypoints.pointerByReference(),
+                                objectDescriptors.pointerByReference(), storage,
+                                params.byValue(), 0);
+                System.out.println("Object Descriptors: " + objectDescriptors.size());
+
+                cvExtractSURF(image, null, imageKeypoints.pointerByReference(),
+                                imageDescriptors.pointerByReference(), storage,
+                                params.byValue(), 0);
+                System.out.println("Image Descriptors: " + imageDescriptors.size());
+
+                tt = (double) cvGetTickCount() - tt;
+                System.out.println("Extraction time = " + tt
+                                / (cvGetTickFrequency() * 1000.));
+
+                CvPoint src_corners[] = { new CvPoint(0, 0),
+                                new CvPoint(object.width, 0),
+                                new CvPoint(object.width, object.height),
+                                new CvPoint(0, object.height) };
+                CvPoint dst_corners[] = new CvPoint[4];
+                for (int j = 0; j < dst_corners.length; j++) {
+                        dst_corners[j] = new CvPoint();
+                }
+
+                // Copy two images
+                IplImage correspond = cvCreateImage(
+                                cvSize(image.width, object.height + image.height), 8, 1);
+                cvSetImageROI(correspond, cvRect(0, 0, object.width, object.height));
+                cvCopy(object, correspond);
+                cvSetImageROI(correspond,
+                                cvRect(0, object.height, correspond.width, correspond.height));
+                cvCopy(image, correspond);
+                cvResetImageROI(correspond);
+
+                // if (locatePlanarObject(objectKeypoints, objectDescriptors,
+                // imageKeypoints, imageDescriptors, src_corners, dst_corners)) {
+                // for (i = 0; i < 4; i++) {
+                // CvPoint r1 = dst_corners[i % 4];
+                // CvPoint r2 = dst_corners[(i + 1) % 4];
+                // cvLine(correspond, cvPoint(r1.x, r1.y + object.height)
+                // .byValue(), cvPoint(r2.x, r2.y + object.height)
+                // .byValue(), colors[8].byValue(), 1, 8, 0);
+                // }
+                // }
+                //
+                // findPairs( objectKeypoints, objectDescriptors, imageKeypoints,
+                // imageDescriptors, ptpairs );
+                
+//              CvSeqReader img_reader =  new CvSeqReader();
+//              cvStartReadSeq( imageDescriptors, img_reader, 0 );
+//              for (int i = 0; i < imageDescriptors.size(); i++) {
+//                      float descriptor = (float) img_reader.ptr;
+//                      CV_NEXT_SEQ_ELEM(img_reader.seq.elem_size, img_reader);
+//                      memcpy(img_ptr, descriptor,
+//                                      length * com.sun.jna.Native.getNativeSize(Float.class));
+//                      img_ptr += length;
+//              }
+
+        }
+        // void
+        // flannFindPairs( CvSeq p1, CvSeq objectDescriptors,
+        // CvSeq p2, CvSeq imageDescriptors, Vector<Integer> ptpairs )
+        // {
+        // int length =
+        // (int)(objectDescriptors.elem_size/com.sun.jna.Native.getNativeSize(Float.class));
+        //
+        // CvMat m_object = new CvMat(objectDescriptors.size(), length, CV_32F);
+        // CvMat m_image = new CvMat(imageDescriptors.size(), length, CV_32F);
+        //
+        //
+        // // copy descriptors
+        // CvSeqReader obj_reader;
+        // Float obj_ptr = m_object.ptr;
+        // cvStartReadSeq(objectDescriptors, obj_reader );
+        // for(int i = 0; i < objectDescriptors.total; i++ )
+        // {
+        // float descriptor = (float)obj_reader.ptr;
+        // CV_NEXT_SEQ_ELEM( obj_reader.seq.elem_size, obj_reader );
+        // memcpy(obj_ptr, descriptor,
+        // length*com.sun.jna.Native.getNativeSize(Float.class));
+        // obj_ptr += length;
+        // }
+        // CvSeqReader img_reader;
+        // float img_ptr = m_image.ptr<Float>(0);
+        // cvStartReadSeq( imageDescriptors, img_reader );
+        // for(int i = 0; i < imageDescriptors.size(); i++ )
+        // {
+        // float descriptor = (float)img_reader.ptr;
+        // CV_NEXT_SEQ_ELEM( img_reader.seq.elem_size, img_reader );
+        // memcpy(img_ptr, descriptor,
+        // length*com.sun.jna.Native.getNativeSize(Float.class));
+        // img_ptr += length;
+        // }
+        //
+        // // find nearest neighbors using FLANN
+        // cvMat m_indices(objectDescriptors.total, 2, CV_32S);
+        // cvMat m_dists(objectDescriptors.total, 2, CV_32F);
+        // cvflann::Index flann_index(m_image, cv::flann::KDTreeIndexParams(4)); //
+        // using 4 randomized kdtrees
+        // flann_index.knnSearch(m_object, m_indices, m_dists, 2,
+        // cv::flann::SearchParams(64) ); // maximum number of leafs checked
+        //
+        // int* indices_ptr = m_indices.ptr<int>(0);
+        // float* dists_ptr = m_dists.ptr<float>(0);
+        // for (int i=0;i<m_indices.rows;++i) {
+        // if (dists_ptr[2*i]<0.6*dists_ptr[2*i+1]) {
+        // ptpairs.push_back(i);
+        // ptpairs.push_back(indices_ptr[2*i]);
+        // }
+        // }
+        // }
+        //
+        // private static boolean locatePlanarObject(CvSeq objectKeypoints,
+        // CvSeq objectDescriptors, CvSeq imageKeypoints,
+        // CvSeq imageDescriptors, CvPoint[] src_corners, CvPoint[] dst_corners) {
+        // Double h[] = new Double[9];
+        // CvMat _h = new CvMat(3, 3, CV_64F, h);
+        // Vector<Integer> ptpairs;
+        // CvMat _pt1, _pt2;
+        // int i, n;
+        //
+        // findPairs( objectKeypoints, objectDescriptors, imageKeypoints,
+        // imageDescriptors, ptpairs );
+        //
+        // n = ptpairs.size()/2;
+        // if( n < 4 ) {
+        // return false;
+        // }
+        //
+        // Vector<CvPoint2D32f> pt1 = new Vector<CvPoint2D32f>(n);
+        // Vector<CvPoint2D32f> pt2 = new Vector<CvPoint2D32f>(n);
+        // for( i = 0; i < n; i++ )
+        // {
+        // pt1[i] = (new
+        // CvPoint2D32f(cvGetSeqElem(objectKeypoints,ptpairs.get(i*2))));
+        // pt2[i] = (new
+        // CvPoint2D32f(cvGetSeqElem(imageKeypoints,ptpairs.get(i*2+1))));
+        // }
+        //
+        // _pt1 = cvMat(1, n, CV_32FC2, pt1[0] );
+        // _pt2 = cvMat(1, n, CV_32FC2, pt2[0] );
+        // if(!cvFindHomography( _pt1, _pt2, _h, CV_RANSAC, 5 )) {
+        // return false;
+        // }
+        //
+        // for( i = 0; i < 4; i++ )
+        // {
+        // double x = src_corners[i].x, y = src_corners[i].y;
+        // double Z = 1./(h[6]*x + h[7]*y + h[8]);
+        // double X = (h[0]*x + h[1]*y + h[2])*Z;
+        // double Y = (h[3]*x + h[4]*y + h[5])*Z;
+        // dst_corners[i] = cvPoint(cvRound(X), cvRound(Y));
+        // }
+        // return true;
+        // }
+
+}
