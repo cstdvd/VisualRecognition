@@ -18,3 +18,6 @@ At least 10 objects should be recognized.
 
 ##Suggested tools
 - OpenCV
+
+##Screenshots:
+![Screenshot](screen.png)
